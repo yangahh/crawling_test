@@ -21,6 +21,7 @@ pw = input('instagram 패스워드 입력 : ')
 # 필요한 url설정
 baseUrl = 'https://www.instagram.com/explore/tags/'
 plusUrl = input("검색할 태그 입력 : ")
+scroll_cnt = int(input("스크롤 횟수 : "))
 
 url = baseUrl + quote_plus(plusUrl)  # quote_plus를 이용하여 아스키코드로 변환
 
@@ -46,12 +47,13 @@ pw_input.submit()
 
 time.sleep(4)
 
+
 # 로그인 후 뜨는 팝업창 해결
 save_late_button1 = driver.find_element_by_xpath(
     '//*[@id="react-root"]/section/main/div/div/div/div/button')
 save_late_button1.click()
 
-driver.implicitly_wait(3)
+driver.implicitly_wait(3)  # 모든 요소가 다 받아질때까지 최대 3초 기다림
 
 save_late_button2 = driver.find_element_by_xpath(
     '/html/body/div[4]/div/div/div/div[3]/button[2]')
@@ -61,13 +63,24 @@ save_late_button2.click()
 driver.get(url)
 time.sleep(1)
 
+
+# 스크롤 반복
+for i in range(scroll_cnt):
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
+
+time.sleep(3)
+
+
 # 드라이버로 페이지 소스를 가져와서 html 변수에 저장
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 
+
 # 검색된 모든 인스타 게시물 선택(아래 selector를 가지고 있는 것을 불러와서 저장)
 posts = soup.select('.v1Nh3.kIKUG._bz0w')  # 클래스가 여러개인 경우는 공백을 없애고 .으로 이어주기
 # posts 변수에는 .v1Nh3.kIKUG._bz0w 이 selector를 가지고 있는 모든 태그들이 들어감.
+
 
 # 각 게시물의 링크와 이미지 url가져오기
 for index, post in enumerate(posts):
