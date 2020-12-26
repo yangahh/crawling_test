@@ -1,16 +1,20 @@
-from urllib.request import urlopen
-from urllib.parse import quote_plus
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from urllib.request import urlopen   # urlopen 함수는 웹에서 얻은 데이터에 대한 객체를 반환해줍니다
+from urllib.parse import quote_plus  # 문자를 아스키코드로 변환하여 url에 넣기 위해
+from bs4 import BeautifulSoup   # beautifulsoup 사용
+from selenium import webdriver  # 웹드라이버 사용
+from selenium.webdriver.common.keys import Keys  # 웹에서 값을 입력해야할 때 사용
 import time
-import os
-import ssl
+import os  # 이미지를 저장할 폴더를 생성할때 필요
+
 
 # CERTIFICATE_VERIFY_FAILED 오류 해결
+import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # 아이디, 패스워드 입력받기
+# 인스타그램에서 검색을 하려면 반드시 로그인을 해야 사용가능하게끔 바꼈습니다..
+# 자동화를 위해 코드에 id와 pw를 넣으면 좋지만 보안상 input을 이용해 입력을 받아 구현하였습니다.
+
 id = input('instagram 아이디 및 계정 입력 : ')
 pw = input('instagram 패스워드 입력 : ')
 
@@ -28,7 +32,7 @@ if not os.path.exists('./img'):
 driver = webdriver.Chrome()
 driver.get('https://www.instagram.com/accounts/login/')
 
-time.sleep(2)  # 웹드라이버가 웹 페이지를 로딩하는데 걸리는 시간을 기다려주기 위해
+time.sleep(2)  # 웹드라이버가 웹 페이지를 로딩하는데 걸리는 시간을 기다려주기 위해 (>> Selenium의 단점..)
 
 # 로그인
 id_input = driver.find_element_by_css_selector(
@@ -69,14 +73,13 @@ posts = soup.select('.v1Nh3.kIKUG._bz0w')  # 클래스가 여러개인 경우는
 for index, post in enumerate(posts):
     print('https://www.instagram.com/' + post.a['href'])
     imgUrl = post.select_one('.KL4Bh').img['src']
-    # print(imgUrl)
     with urlopen(imgUrl) as f:  # imgUrl을 열어서 저장
-        # wb는 쓰기모드 + 바이너리모드. 이미지이기때문에 b모드를 써줘야한다.
 
         # 저장한 imgUrl을 다시 열어서 이미지 파일로 파일 이름을 지정해서 저장
         with open('./img/' + plusUrl + str(index) + '.jpg', 'wb') as h:
+            # wb는 쓰기모드 + 바이너리모드. 이미지이기때문에 b모드를 써줘야한다.
             image = f.read()  # f를 읽어와서 img라는 변수 안에 저장
-            h.write(image)
+            h.write(image)   # 가져온 이미지를 해당 경로에 지정된 이름으로 저장
 
     print(imgUrl)
     print()
