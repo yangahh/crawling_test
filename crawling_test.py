@@ -10,6 +10,9 @@ import ssl
 # CERTIFICATE_VERIFY_FAILED 오류 해결
 ssl._create_default_https_context = ssl._create_unverified_context
 
+# 아이디, 패스워드 입력받기
+id = input('instagram 아이디 및 계정 입력 : ')
+pw = input('instagram 패스워드 입력 : ')
 
 # 필요한 url설정
 baseUrl = 'https://www.instagram.com/explore/tags/'
@@ -20,10 +23,6 @@ url = baseUrl + quote_plus(plusUrl)  # quote_plus를 이용하여 아스키코�
 # 이미지를 저장할 img 폴더 생성 (폴더가 없을때만 생성)
 if not os.path.exists('./img'):
     os.mkdir('./img')
-
-# 아이디, 패스워드 입력받기
-id = input('instagram 아이디 및 계정 입력 : ')
-pw = input('instagram 패스워드 입력 : ')
 
 # 브라우저 실행 및 인스타그램 로그인 화면 이동
 driver = webdriver.Chrome()
