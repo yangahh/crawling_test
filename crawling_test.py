@@ -84,12 +84,12 @@ posts = soup.select('.v1Nh3.kIKUG._bz0w')  # 클래스가 여러개인 경우는
 
 # 각 게시물의 링크와 이미지 url가져오기
 for index, post in enumerate(posts):
-    print('https://www.instagram.com/' + post.a['href'])
-    imgUrl = post.select_one('.KL4Bh').img['src']
+    print('https://www.instagram.com/' + post.a['href'])  # 각 인스타그램 포스트 주소
+    imgUrl = post.select_one('.KL4Bh').img['src']  # 각 포스트에 있는 이미지 url
     with urlopen(imgUrl) as f:  # imgUrl을 열어서 저장
 
         # 저장한 imgUrl을 다시 열어서 이미지 파일로 파일 이름을 지정해서 저장
-        with open('./img/' + plusUrl + str(index) + '.jpg', 'wb') as h:
+        with open('./img/' + plusUrl + str(index) + '.jpg', 'wb') as h:  # 이미지를 저장할 경로와 이름 지정
             # wb는 쓰기모드 + 바이너리모드. 이미지이기때문에 b모드를 써줘야한다.
             image = f.read()  # f를 읽어와서 img라는 변수 안에 저장
             h.write(image)   # 가져온 이미지를 해당 경로에 지정된 이름으로 저장
